@@ -1,26 +1,48 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-function App() {
+import './App.css';
+import { showModal } from './actions/modalAction';
+
+function App(props) {
+  const {
+    displayModal,
+    handleShowModal,
+  } = props;
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button
+        type="button"
+        className="App__button"
+        onClick={() => handleShowModal(!displayModal)}
+      >
+        Click for Magic
+      </button>
+      {displayModal && <div className="App__peekaboo">Peekaboo</div>}
     </div>
   );
 }
 
-export default App;
+App.propTypes = {
+  displayModal: PropTypes.bool.isRequired,
+  handleShowModal: PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => ({
+  displayModal: state.modal.display
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    handleShowModal: showModal,
+  },
+  dispatch,
+);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(App);
